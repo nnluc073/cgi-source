@@ -1,0 +1,39 @@
+application:
+  read-timeout: ${REST_TEMPLATE_READ_TIMEOUT:5000}
+  connect-timeout: ${REST_TEMPLATE_CONNECT_TIMEOUT:5000}
+
+server:
+  port: 9090
+  servlet:
+    context-path: /user
+
+spring:
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/master.xml
+  datasource:
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/notification_db}
+    username: ${DATABASE_USERNAME:keycloak}
+    password: ${DATABASE_PASSWORD:password}
+  jpa:
+    database-platform: com.fundoo.notification.utils.PostgreSQLDialectCustom
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        dialect: com.fundoo.notification.utils.PostgreSQLDialectCustom
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    show-sql: true
+
+logging:
+  config: classpath:${LOG_CONFIG:log4j2.xml}
+  level:
+    root: ${LOG_ROOT_LEVEL:info}
+    org.springframework.web: ${LOG_SPRING_LEVEL:debug}
+    hibernate: ${LOG_HIBERNATE_LEVEL:error}

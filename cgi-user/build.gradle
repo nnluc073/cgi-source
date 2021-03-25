@@ -1,0 +1,95 @@
+plugins {
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'org.liquibase.gradle' version '2.0.4'
+	id 'java'
+}
+
+group = 'com.cgi.user'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+ext {
+	springCloudVersion = "Hoxton.SR8"
+	springBootVersion = "2.3.5.RELEASE"
+	mapstructVersion = "1.4.2.Final"
+	lombokVersion = "1.18.18"
+	lombokMapstructBindingVersion = "0.2.0"
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+dependencies {
+	implementation project(':cgi-common')
+	implementation 'org.springframework.boot:spring-boot-starter'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	implementation 'org.springframework.security:spring-security-config'
+	implementation 'org.springframework.security:spring-security-oauth2-jose'
+
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-configuration-processor'
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+	implementation 'org.springframework.cloud:spring-cloud-starter-oauth2'
+
+	implementation 'com.microsoft.sqlserver:mssql-jdbc'
+
+	implementation 'org.hibernate:hibernate-jpamodelgen'
+	annotationProcessor "org.hibernate:hibernate-jpamodelgen"
+
+	implementation 'org.liquibase:liquibase-core'
+
+	implementation 'com.jayway.jsonpath:json-path'
+	implementation 'com.google.code.gson:gson'
+	implementation 'org.apache.commons:commons-lang3'
+	implementation 'org.apache.commons:commons-text:1.8'
+
+	implementation "org.mapstruct:mapstruct:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}"
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}", "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
+
+	implementation "org.projectlombok:lombok:${lombokVersion}"
+	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+	compile group: 'org.junit.jupiter', name: 'junit-jupiter-api'
+	compile group: 'org.junit.jupiter', name: 'junit-jupiter-engine'
+
+}
+
+
+liquibase {
+	activities {
+		main {
+			changeLogFile 'src/main/db'
+			url 'jdbc:postgresql://localhost:5432/bonita'
+			username '%USER_NAME%'
+			password '%PASSWORD%'
+			referenceUrl 'jdbc:postgresql://localhost:5432/bonita_7.5'
+			referenceUsername '%USER_NAME%'
+			referencePassword '%PASSWORD%'
+		}
+
+	}
+
+}
+test {
+	useJUnitPlatform()
+}

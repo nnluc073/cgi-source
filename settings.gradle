@@ -1,0 +1,3 @@
+rootProject.name = 'cgi-parent'
+include 'cgi-common'
+include 'cgi-user'
